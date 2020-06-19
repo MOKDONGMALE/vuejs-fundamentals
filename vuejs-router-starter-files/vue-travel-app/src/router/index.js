@@ -1,52 +1,33 @@
 import Vue from "vue";
-import VueRouter from "vue-router";
+import Router from "vue-router";
 import Home from "../views/Home.vue";
-import Brazil from "../views/Brazil"
-import Hawaii from "../views/Hawaii"
-import Jamaica from "../views/Jamaica"
-import Panama from "../views/Panama"
+Vue.use(Router);
 
-Vue.use(VueRouter);
+export default new Router({
+  mode: "history",
+  linkExactActiveClass: "vue-school-active-class",
+  routes: [
+    {
+      path: "/",
+      name: "home",
+      component: Home,
+      props: true
+    },
 
-const routes = [
-  {
-    path: "/",
-    name: "Home",
-    component: Home
-  },
-  {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
-  },
-  {
-    path: "/brazil",
-    name: "brazil",
-    component: Brazil
-  },
-  {
-    path: "/hawaii",
-    name: "hawaii",
-    component: Hawaii
-  },
-  {
-    path: "/jamaica",
-    name: "jamaica",
-    component: Jamaica
-  },
-  {
-    path: "/panama",
-    name: "panama",
-    component: Panama
-  },
-];
-
-const router = new VueRouter({
-  routes
+    {
+      path: "/destination/:slug",
+      name: "DestinationDetails",
+      props: true,
+      component: () =>
+        import(/* webpackChunkName: "DestinationDetails"*/ "../views/DestinationDetails"),
+      children: [
+        {
+          path: "/details/:slug/:experienceSlug",
+          name: "experienceDetails",
+          props: true,
+          component: () => import(/*webpackChunkName: "ExperienceDetails"*/ "../views/ExperienceDetails")
+        }
+      ]
+    }
+  ]
 });
-
-export default router;
